@@ -1,0 +1,31 @@
+{
+  "easycom": {
+    "autoscan": true
+  },
+  "pages": [
+    {
+      "path": "pages/order/order",
+      "style": { "navigationBarTitleText": "点菜" }
+    },
+    {
+      "path": "pages/mine/mine",
+      "style": { "navigationBarTitleText": "我的" }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarBackgroundColor": "#ff5e62",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "点菜系统",
+    "backgroundColor": "#f5f6f8"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#ff5e62",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      { "pagePath": "pages/order/order", "text": "点菜" },
+      { "pagePath": "pages/mine/mine", "text": "我的" }
+    ]
+  }
+}

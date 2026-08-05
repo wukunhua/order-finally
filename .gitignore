@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Build output
+dist/
+build/
+unpackage/
+*/dist/
+*/unpackage/
+
+# Env / secrets
+.env
+*.local
+server/.env
+admin/.env
+miniapp/.env
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+Thumbs.db
+
+# Uploads (keep dir, ignore files)
+server/uploads/*
+!server/uploads/.gitkeep
