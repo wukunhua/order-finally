@@ -5,9 +5,19 @@
       <view class="avatar">{{ avatarEmoji }}</view>
       <view class="info">
         <view class="nick">{{ user?.nickname || '未登录' }}</view>
+        <view v-if="needSyncProfile" class="profile-edit">
+          <input
+            type="nickname"
+            class="nick-input"
+            v-model="editNickname"
+            placeholder="点击填写微信昵称"
+          />
+          <view class="save-btn" @tap="onSaveProfile">保存</view>
+        </view>
         <view class="role">
           <text v-if="isAdmin" class="role-tag admin">管理员</text>
           <text v-else class="role-tag">普通用户</text>
+          {{ user.role }}
         </view>
       </view>
     </view>
@@ -57,16 +67,21 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
-import { getUser, ensureLogin } from '../../utils/auth';
-import { orderApi } from '../../api';
+import { getUser, setUser, ensureLogin } from '../../utils/auth';
+import { orderApi, authApi } from '../../api';
 
 const user = ref(getUser());
 const isAdmin = computed(() => user.value?.role === 'admin');
+const needSyncProfile = computed(() => {
+  const n = user.value?.nickname;
+  return !n || n === '微信用户' || n === '测试用户';
+});
 
 const scope = ref('today'); // today | history
 const viewAll = ref(false); // 管理员:是否看所有人的订单
 const orders = ref([]);
 const loading = ref(false);
+const editNickname = ref('');
 
 const avatarEmoji = computed(() => (isAdmin.value ? '🛡️' : '👤'));
 
@@ -104,6 +119,20 @@ async function load() {
     /* 拦截层已提示 */
   } finally {
     loading.value = false;
+  }
+}
+
+async function onSaveProfile() {
+  const nick = editNickname.value.trim();
+  if (!nick) return;
+  try {
+    const data = await authApi.updateProfile({ nickname: nick });
+    setUser(data);
+    user.value = data;
+    editNickname.value = '';
+    uni.showToast({ title: '已更新', icon: 'success' });
+  } catch (e) {
+    uni.showToast({ title: (e && e.message) || '保存失败', icon: 'none' });
   }
 }
 
@@ -149,6 +178,35 @@ onShow(async () => {
 }
 .role {
   margin-top: 10rpx;
+}
+.profile-edit {
+  margin-top: 12rpx;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.nick-input {
+  flex: 1;
+  height: 56rpx;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 28rpx;
+  padding: 0 24rpx;
+  font-size: 26rpx;
+  color: #fff;
+}
+.nick-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+.save-btn {
+  height: 56rpx;
+  padding: 0 24rpx;
+  background: #fff;
+  color: #ff5e62;
+  font-size: 26rpx;
+  border-radius: 28rpx;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
 }
 .role-tag {
   font-size: 22rpx;

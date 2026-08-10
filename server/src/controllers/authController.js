@@ -91,4 +91,16 @@ async function profile(req, res) {
   res.json(success(publicUser(req.user)));
 }
 
-module.exports = { wxLogin, mockLogin, adminLogin, profile };
+// 更新用户资料(昵称/头像等)
+async function updateProfile(req, res) {
+  const { nickname, avatarUrl } = req.body || {};
+  const user = req.user;
+
+  if (nickname !== undefined) user.nickname = nickname;
+  if (avatarUrl !== undefined) user.avatarUrl = avatarUrl;
+  await user.save();
+
+  res.json(success(publicUser(user), '资料已更新'));
+}
+
+module.exports = { wxLogin, mockLogin, adminLogin, profile, updateProfile };

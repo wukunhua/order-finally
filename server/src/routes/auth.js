@@ -9,5 +9,6 @@ router.post('/wx-login', wrap(ctrl.wxLogin));
 router.post('/mock-login', wrap(ctrl.mockLogin)); // 开发兜底,无需微信凭证
 router.post('/admin/login', wrap(ctrl.adminLogin));
 router.get('/profile', auth, wrap(ctrl.profile));
+router.put('/profile', auth, wrap(ctrl.updateProfile));
 
 module.exports = router;

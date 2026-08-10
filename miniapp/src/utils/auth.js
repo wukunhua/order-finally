@@ -36,8 +36,9 @@ export async function ensureLogin() {
   const savedToken = getToken();
   if (savedToken) {
     try {
-      // 调 profile 接口验证 token 是否仍有效(服务端会校验过期/签名/用户状态)
-      await http.get('/auth/profile', null, { silent: true });
+      // 调 profile 接口验证 token 是否仍有效,同时同步最新的用户信息(角色/昵称等可能被管理端修改)
+      const profile = await http.get('/auth/profile', null, { silent: true });
+      setUser(profile);
       return savedToken;
     } catch (e) {
       const msg = (e && e.message) || '';

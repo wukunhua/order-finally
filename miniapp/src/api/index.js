@@ -2,6 +2,7 @@ import http from '../utils/request';
 
 export const authApi = {
   profile: () => http.get('/auth/profile'),
+  updateProfile: (data) => http.put('/auth/profile', data),
 };
 
 export const categoryApi = {
